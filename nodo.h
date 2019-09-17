@@ -14,6 +14,12 @@ public:
 		siguiente = sig;
 		anterior = ant;
 	}
+	//Recursividad
+	void BorrarNodos() {
+		if (siguiente != NULL)
+			siguiente->BorrarNodos();
+		delete this;
+	}
 };
 
 #endif // !__NODO_H__
