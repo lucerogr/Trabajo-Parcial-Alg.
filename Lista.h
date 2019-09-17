@@ -17,6 +17,9 @@ public:
 	void EliminarInicio();
 	void EliminarFinal();
 	void EliminarPosicion(T pos);
+	void EliminarNodos();
+	void BuscarElemento(T v);
+	void ConcatenarListas(Lista<T> *list);
 	T Longitud();
 	T ObtenerPosicion(T pos);
 };
@@ -122,7 +125,41 @@ void Lista<T>::EliminarPosicion(T pos){
 		lon--;
 	}
 }
-//---------------------------------------
+//----------------------------------------
+template<class T>
+void Lista<T>::EliminarNodos() {
+	inicio->BorrarNodos();
+	inicio = NULL;
+	lon = 0;
+}
+//-----------------------------------------
+template<class T>
+void Lista<T>::ConcatenarListas(Lista<T> *list) {
+	Nodo<T> *aux = list->inicio;
+	T cont = 0;
+	T lon2 = list->Longitud();
+	while (aux!=NULL) {
+		AgregarFinal(aux->valor);
+		aux = aux->siguiente;
+		cont++;
+	}
+	aux = NULL;
+}
+//----------------------------------------
+template<class T>
+void Lista<T>::BuscarElemento(T v) {
+	Nodo<T> *aux = inicio;
+	T cont = 1;
+	while (aux->valor != v && cont < lon) {
+		aux = aux->siguiente;
+		cont++;
+	}
+	if (aux->valor!=v)
+		cout << "El elemento no se encuentra en la lista!" << endl;
+	else
+		cout << "El elemento " << v << " esta en la posicion: " << cont << endl;
+}
+//----------------------------------------
 template<class T>
 T Lista<T>::ObtenerPosicion(T pos) {
 	if (pos == 1) return inicio->valor;
@@ -137,7 +174,7 @@ T Lista<T>::ObtenerPosicion(T pos) {
 		aux = NULL;
 	}
 }
-//-----------------------------------
+//-----------------------------------------
 template<class T>
 T Lista<T>::Longitud() {
 	return lon;
