@@ -20,6 +20,10 @@ public:
 	void EliminarNodos();
 	void BuscarElemento(T v);
 	void ConcatenarListas(Lista<T> *list);
+	
+	void GuardarArchivo(string file);
+	void CargarArchivo(string file);
+	
 	T Longitud();
 	T ObtenerPosicion(T pos);
 };
@@ -179,6 +183,36 @@ template<class T>
 T Lista<T>::Longitud() {
 	return lon;
 }
+//----------------------------------------
+template<class T>
+void Lista<T>::GuardarArchivo(string file){
+	Nodo<T> *aux = inicio;
+	ofstream of;
+	of.open(file.c_str());
+	if (of.is_open()) {
+		while (aux != NULL) {
+			of << aux->valor;
+			of << " ";
+			//of << " <=> ";
+			aux = aux->siguiente;
+		}
+		//of << "NULL";
+	}
+	else
+		cout << "No se puede guardar el archivo..." << endl;
+	of.close();
+}
+//----------------------------------------
+template<class T>
+void Lista<T>::CargarArchivo(string file){
+	T lineas;
+	ifstream in;
+	in.open(file.c_str());
+	if (in.is_open()) {
+		while (in >> lineas)
+			AgregarFinal(lineas);
+	}
+	else
+		cout << "No se puede abrir el archivo " << file << endl;
+}
 #endif // !__LISTA_H__
-//asdas
-//ghjghjgh
