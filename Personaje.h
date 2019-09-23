@@ -2,13 +2,14 @@
 using namespace System::Drawing;
 class Personaje {
 protected:
-	float x, y, xinicial, yinicial, ancho, alto, indice_ancho, indice_alto, vida;
+	float x, y, xinicial, yinicial, ancho, alto, indice_ancho, indice_alto, fuerza;
+	int vida;
 public:
-	Personaje() {
+	Personaje(int _vida) {
 		xinicial = yinicial = 0;
 		x = y = 0;
 		indice_alto = indice_ancho = 0;
-		//vida = 10;
+		this->vida = _vida;
 	}
 	~Personaje() {}
 	float getx() { return x; }
@@ -20,6 +21,8 @@ public:
 	void seth(float nuevo) { alto = nuevo; }
 	void setvida(float nuevo) { vida = nuevo; }
 	void mover(Graphics^g, Bitmap^imagen) {}
+	int getFuerza() { return this->fuerza; }
+	void setFuerza(float _fuerza) { this->fuerza = _fuerza; }
 
 	void mostrar(Graphics ^g, Bitmap^imagen) {
 		Rectangle porcion = Rectangle(indice_ancho*ancho, indice_alto*alto, ancho, alto);
@@ -31,7 +34,7 @@ public:
 class Heroe : public Personaje {
 private:
 public: 
-	Heroe():Personaje(){}
+	Heroe():Personaje(100){}
 	~Heroe(){}
 	void mover(Graphics^g, Bitmap^imagen) {
 		indice_alto = 5;
@@ -45,8 +48,8 @@ class Enemigo : public Personaje {
 private:
 	int dx;
 public:
-	Enemigo():Personaje(){
-		dx = -5;
+	Enemigo():Personaje(100){
+		dx = 0;
 	}
 	~Enemigo(){}
 	void mover(Graphics^g, Bitmap^imagen) {
