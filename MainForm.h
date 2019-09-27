@@ -1,5 +1,7 @@
 #pragma once
 #include "Personaje.h"
+#include "Mapas.h"
+#include "Controlador.h"
 namespace parcial1 {
 
 	using namespace System;
@@ -20,14 +22,25 @@ namespace parcial1 {
 			InitializeComponent();
 			//
 			//TODO: agregar código de constructor aquí
+			num_mapa = 1;
+			//-------------------------------------------------------------------------
+			mapa1 = new Mapas(1, 0, 0, 625, 384, 0, 0, "fondazo1_last.jpg", 11, false);
+			mapa2 = new Mapas(2, 0, 0, 625, 384, 0, 0, "fondazo2_last.jpg", 35, false);
+			mapa3 = new Mapas(3, 0, 0, 625, 384, 0, 0, "fondazo3_last.jpg", 15, false);
+			mapa4 = new Mapas(4, 0, 0, 625, 384, 0, 0, "fondazo4_last.jpg", 23, false);
+			mapa5 = new Mapas(5, 0, 0, 625, 384, 0, 0, "fondazo5_last.jpg", 15, false);
+			//-------------------------------------------------------------------------
 
 			imagen = gcnew Bitmap("heroe.jpg");//se tiene que corregir los sprites, no todos tienen el mismo ancho
 			imagen_malo1 = gcnew Bitmap("esqueleto.png");
+			imagen_malo2 = gcnew Bitmap("Orcos.jpg");
 			objHeroe = new Heroe();
 			malo1 = new Enemigo();
+			malo2 = new Enemigo();
 			//			obj->setancho_alto(imagen);
-			objHeroe->setx(200);
-			objHeroe->sety(200);
+			obj = new Controlador();
+			objHeroe->setx(150);
+			objHeroe->sety(315);
 			objHeroe->setw(imagen->Width / 14);
 			objHeroe->seth(imagen->Height / 6);
 			objHeroe->setFuerza(50);
@@ -36,11 +49,17 @@ namespace parcial1 {
 			defendido = false;
 			item_defendido = false;
 
-			malo1->setx(500);
-			malo1->sety(200);
+			malo1->setx(415);
+			malo1->sety(330);
 			malo1->setw(imagen_malo1->Width / 6);
 			malo1->seth(imagen_malo1->Height / 6);
 			malo1->setFuerza(35);
+
+			malo2->setx(415);
+			malo2->sety(330);
+			malo2->setw(imagen_malo1->Width / 14);
+			malo2->seth(imagen_malo1->Height / 1);
+			malo2->setFuerza(35);
 			//
 		}
 
@@ -62,13 +81,24 @@ namespace parcial1 {
 	private:
 		/// <summary>
 		/// Variable del diseñador necesaria.
+		Controlador *obj;
 		Heroe*objHeroe;
 		Enemigo*malo1;
+		Enemigo*malo2;
 		Bitmap^imagen;
 		Bitmap^imagen_malo1;
+		Bitmap^imagen_malo2;
 		bool turno;
 		bool defendido;
 		bool item_defendido = false;
+		int num_mapa;
+		/////////////////////////////////////////////
+
+		Mapas *mapa1;
+		Mapas *mapa2;
+		Mapas *mapa3;
+		Mapas *mapa4;
+		Mapas *mapa5;
 	private: System::Windows::Forms::Button^  Atacar;
 
 	private: System::Windows::Forms::ProgressBar^  progressBar1;
@@ -79,6 +109,8 @@ namespace parcial1 {
 	private: System::Windows::Forms::Button^  Item_Defensa;
 	private: System::Windows::Forms::Button^  Regresar_btn;
 	private: System::Windows::Forms::TextBox^  textBox1;
+
+	private: System::Windows::Forms::PictureBox^  pictureBox1;
 	private: System::Windows::Forms::TextBox^  textBox2;
 
 
@@ -95,6 +127,7 @@ namespace parcial1 {
 			 void InitializeComponent(void)
 			 {
 				 this->components = (gcnew System::ComponentModel::Container());
+				 System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainForm::typeid));
 				 this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 				 this->Atacar = (gcnew System::Windows::Forms::Button());
 				 this->progressBar1 = (gcnew System::Windows::Forms::ProgressBar());
@@ -106,6 +139,8 @@ namespace parcial1 {
 				 this->Regresar_btn = (gcnew System::Windows::Forms::Button());
 				 this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 				 this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+				 this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+				 (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 				 this->SuspendLayout();
 				 // 
 				 // timer1
@@ -115,7 +150,7 @@ namespace parcial1 {
 				 // 
 				 // Atacar
 				 // 
-				 this->Atacar->Location = System::Drawing::Point(35, 248);
+				 this->Atacar->Location = System::Drawing::Point(12, 404);
 				 this->Atacar->Name = L"Atacar";
 				 this->Atacar->Size = System::Drawing::Size(93, 36);
 				 this->Atacar->TabIndex = 0;
@@ -126,7 +161,7 @@ namespace parcial1 {
 				 // progressBar1
 				 // 
 				 this->progressBar1->ForeColor = System::Drawing::Color::Red;
-				 this->progressBar1->Location = System::Drawing::Point(547, 49);
+				 this->progressBar1->Location = System::Drawing::Point(440, 49);
 				 this->progressBar1->Name = L"progressBar1";
 				 this->progressBar1->Size = System::Drawing::Size(173, 23);
 				 this->progressBar1->TabIndex = 2;
@@ -135,7 +170,7 @@ namespace parcial1 {
 				 // Barra_Heroe
 				 // 
 				 this->Barra_Heroe->ForeColor = System::Drawing::Color::Lime;
-				 this->Barra_Heroe->Location = System::Drawing::Point(35, 49);
+				 this->Barra_Heroe->Location = System::Drawing::Point(12, 49);
 				 this->Barra_Heroe->Name = L"Barra_Heroe";
 				 this->Barra_Heroe->Size = System::Drawing::Size(172, 23);
 				 this->Barra_Heroe->TabIndex = 3;
@@ -143,7 +178,7 @@ namespace parcial1 {
 				 // 
 				 // Defender
 				 // 
-				 this->Defender->Location = System::Drawing::Point(315, 248);
+				 this->Defender->Location = System::Drawing::Point(267, 404);
 				 this->Defender->Name = L"Defender";
 				 this->Defender->Size = System::Drawing::Size(104, 36);
 				 this->Defender->TabIndex = 4;
@@ -153,7 +188,7 @@ namespace parcial1 {
 				 // 
 				 // Inventario
 				 // 
-				 this->Inventario->Location = System::Drawing::Point(557, 248);
+				 this->Inventario->Location = System::Drawing::Point(503, 404);
 				 this->Inventario->Name = L"Inventario";
 				 this->Inventario->Size = System::Drawing::Size(110, 36);
 				 this->Inventario->TabIndex = 5;
@@ -163,7 +198,7 @@ namespace parcial1 {
 				 // 
 				 // Item_Vida
 				 // 
-				 this->Item_Vida->Location = System::Drawing::Point(170, 277);
+				 this->Item_Vida->Location = System::Drawing::Point(165, 411);
 				 this->Item_Vida->Name = L"Item_Vida";
 				 this->Item_Vida->Size = System::Drawing::Size(96, 23);
 				 this->Item_Vida->TabIndex = 6;
@@ -174,7 +209,7 @@ namespace parcial1 {
 				 // 
 				 // Item_Defensa
 				 // 
-				 this->Item_Defensa->Location = System::Drawing::Point(441, 277);
+				 this->Item_Defensa->Location = System::Drawing::Point(377, 411);
 				 this->Item_Defensa->Name = L"Item_Defensa";
 				 this->Item_Defensa->Size = System::Drawing::Size(107, 23);
 				 this->Item_Defensa->TabIndex = 7;
@@ -185,7 +220,7 @@ namespace parcial1 {
 				 // 
 				 // Regresar_btn
 				 // 
-				 this->Regresar_btn->Location = System::Drawing::Point(328, 300);
+				 this->Regresar_btn->Location = System::Drawing::Point(521, 411);
 				 this->Regresar_btn->Name = L"Regresar_btn";
 				 this->Regresar_btn->Size = System::Drawing::Size(75, 23);
 				 this->Regresar_btn->TabIndex = 8;
@@ -196,24 +231,37 @@ namespace parcial1 {
 				 // 
 				 // textBox1
 				 // 
-				 this->textBox1->Location = System::Drawing::Point(643, 78);
+				 this->textBox1->Location = System::Drawing::Point(558, 78);
 				 this->textBox1->Name = L"textBox1";
-				 this->textBox1->Size = System::Drawing::Size(77, 20);
+				 this->textBox1->Size = System::Drawing::Size(55, 20);
 				 this->textBox1->TabIndex = 9;
 				 this->textBox1->TextChanged += gcnew System::EventHandler(this, &MainForm::textBox1_TextChanged_1);
 				 // 
 				 // textBox2
 				 // 
-				 this->textBox2->Location = System::Drawing::Point(35, 78);
+				 this->textBox2->Location = System::Drawing::Point(12, 78);
 				 this->textBox2->Name = L"textBox2";
-				 this->textBox2->Size = System::Drawing::Size(70, 20);
+				 this->textBox2->Size = System::Drawing::Size(41, 20);
 				 this->textBox2->TabIndex = 10;
+				 // 
+				 // pictureBox1
+				 // 
+				 this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
+				 this->pictureBox1->Location = System::Drawing::Point(530, 141);
+				 this->pictureBox1->Name = L"pictureBox1";
+				 this->pictureBox1->Size = System::Drawing::Size(83, 64);
+				 this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
+				 this->pictureBox1->TabIndex = 12;
+				 this->pictureBox1->TabStop = false;
+				 this->pictureBox1->Visible = false;
+				 this->pictureBox1->Click += gcnew System::EventHandler(this, &MainForm::pictureBox1_Click);
 				 // 
 				 // MainForm
 				 // 
 				 this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-				 this->ClientSize = System::Drawing::Size(795, 335);
+				 this->ClientSize = System::Drawing::Size(625, 462);
+				 this->Controls->Add(this->pictureBox1);
 				 this->Controls->Add(this->textBox2);
 				 this->Controls->Add(this->textBox1);
 				 this->Controls->Add(this->Regresar_btn);
@@ -228,6 +276,7 @@ namespace parcial1 {
 				 this->Name = L"MainForm";
 				 this->Text = L"MainForm";
 				 this->Load += gcnew System::EventHandler(this, &MainForm::MainForm_Load);
+				 (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 				 this->ResumeLayout(false);
 				 this->PerformLayout();
 
@@ -244,38 +293,66 @@ namespace parcial1 {
 		BufferedGraphics^bg = bc->Allocate(g, this->ClientRectangle);
 		bg->Graphics->Clear(Color::White);
 
-		if (objHeroe->getvida() > 0) {
-			objHeroe->mover(bg->Graphics, imagen);
-		}
-		if (malo1->getvida() > 0) {
-			malo1->mover(bg->Graphics, imagen_malo1);
-		}
-
-
-		if (malo1->getvida() > 0 && turno == false) {
-			if (defendido == true) {
-				if (item_defendido == true) {
-					objHeroe->setvida(objHeroe->getvida() - (malo1->getFuerza() / 4));
-					Barra_Heroe->Increment((malo1->getFuerza() / 4) * -1);
-					textBox2->Text = ((malo1->getFuerza() / 4)* -1).ToString();
-				}
-				else {
-					objHeroe->setvida(objHeroe->getvida() - (malo1->getFuerza() / 2));
-					Barra_Heroe->Increment((malo1->getFuerza() / 2) * -1);
-					textBox2->Text = ((malo1->getFuerza()/2) * -1).ToString();
-				}
-			}
-			else {
-				objHeroe->setvida(objHeroe->getvida() - malo1->getFuerza());
-				Barra_Heroe->Increment(malo1->getFuerza() * -1);
-				textBox2->Text = (malo1->getFuerza() * -1).ToString();
-			}
-
+		//mapa2->Mover(bg->Graphics);
+		//mapa3->Mover(bg->Graphics);
+		//mapa4->Mover(bg->Graphics);
+		//mapa5->Mover(bg->Graphics);
+		switch (num_mapa) {
+		case 1:
+			mapa1->Mover(bg->Graphics);
+			break;
+		case 2:
 			
-
-			turno = true;
+			mapa2->Mover(bg->Graphics);
+			break;
+		case 3:
+			mapa3->Mover(bg->Graphics);
+			break;
+		case 4:
+			mapa4->Mover(bg->Graphics);
+			break;
+		case 5:
+			mapa5->Mover(bg->Graphics);
+			break;
+		default:
+			break;
 		}
 		
+
+		//if (objHeroe->getvida() > 0) {
+		//	objHeroe->mover(bg->Graphics, imagen);
+		//}
+		//if (malo1->getvida() > 0) {
+		//	malo1->mover(bg->Graphics, imagen_malo1);
+		//}
+		//
+		//if (malo1->getvida() <= 0) {
+		//	malo1->~Enemigo();
+		//	pictureBox1->Visible = true;
+		//}
+		//else {
+		//	if (turno == false) {
+		//		if (defendido == true) {
+		//			if (item_defendido == true) {
+		//				objHeroe->setvida(objHeroe->getvida() - (malo1->getFuerza() / 4));
+		//				Barra_Heroe->Increment((malo1->getFuerza() / 4) * -1);
+		//				textBox2->Text = ((malo1->getFuerza() / 4)* -1).ToString();
+		//			}
+		//			else {
+		//				objHeroe->setvida(objHeroe->getvida() - (malo1->getFuerza() / 2));
+		//				Barra_Heroe->Increment((malo1->getFuerza() / 2) * -1);
+		//				textBox2->Text = ((malo1->getFuerza() / 2) * -1).ToString();
+		//			}
+		//		}
+		//		else {
+		//			objHeroe->setvida(objHeroe->getvida() - malo1->getFuerza());
+		//			Barra_Heroe->Increment(malo1->getFuerza() * -1);
+		//			textBox2->Text = (malo1->getFuerza() * -1).ToString();
+		//		}
+		//		turno = true;
+		//	}
+		//}
+		obj->Comprobar(bg->Graphics, objHeroe, malo1, imagen, imagen_malo1, turno, defendido, item_defendido, Barra_Heroe, textBox2, pictureBox1);
 		bg->Render(g);
 		delete bc; delete bg; delete g;
 
@@ -287,12 +364,6 @@ namespace parcial1 {
 		progressBar1->Increment(objHeroe->getFuerza()*-1);
 		textBox1->Text = (objHeroe->getFuerza() * -1).ToString();
 		turno = false;
-	}
-	private: System::Void progressBar1_Click(System::Object^  sender, System::EventArgs^  e) {
-
-	}
-	private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-		
 	}
 	private: System::Void progressBar1_Click_1(System::Object^  sender, System::EventArgs^  e) {
 
@@ -321,6 +392,11 @@ private: System::Void Item_Defensa_Click(System::Object^  sender, System::EventA
 	turno = false;
 }
 private: System::Void textBox1_TextChanged_1(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void pictureBox1_Click(System::Object^  sender, System::EventArgs^  e) {
+	//Pasar a siguiente nivel
+	num_mapa++;
+
 }
 };
 }
