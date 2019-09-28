@@ -14,13 +14,9 @@ public:
 	~Controlador() {}
 	
 	void Start(int it, bool dificultad, Enemigo** arrMalo, Graphics^g, Heroe *objHeroe, Bitmap^heroeimg, Bitmap^maloimg, bool defendido, bool item_defendido, System::Windows::Forms::ProgressBar^ Barra_Heroe, System::Windows::Forms::TextBox^  textBox2, System::Windows::Forms::PictureBox^  pictureBox1){
-		
-		
-		
 
-		if (objHeroe->getvida() > 0) {
-			objHeroe->mover(g, heroeimg);
-		}
+		objHeroe->mover(g, heroeimg);
+		
 		if (arrMalo[it]->getvida() > 0) {
 			arrMalo[it]->mover(g, maloimg);
 		}
