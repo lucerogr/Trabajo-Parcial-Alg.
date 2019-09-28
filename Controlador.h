@@ -19,16 +19,27 @@ public:
 	void Start(int it, Enemigo** arrMalo, Graphics^g, Heroe *objHeroe, Bitmap^heroeimg, Bitmap^maloimg, bool defendido, bool item_defendido, System::Windows::Forms::ProgressBar^ Barra_Heroe, System::Windows::Forms::TextBox^  textBox2, System::Windows::Forms::PictureBox^  pictureBox1){
 
 		objHeroe->mover(g, heroeimg);
-		
-		if (arrMalo[it]->getvida() > 0) {
-			arrMalo[it]->mover(g, maloimg);
+		if (it == 0 || it == 2) {
+			if (arrMalo[it]->getvida() > 0) {
+				arrMalo[it]->mover(g, maloimg, 5);
+			}
+		}
+		if (it == 1 || it == 3) {
+			if (arrMalo[it]->getvida() > 0) {
+				arrMalo[it]->mover(g, maloimg, 12);
+			}
+		}
+		if (it == 4) {
+			if (arrMalo[it]->getvida() > 0) {
+				arrMalo[it]->mover(g, maloimg, 0);
+			}
 		}
 
 		if (arrMalo[it]->getvida() <= 0) {
 			arrMalo[it]->~Enemigo();
 			pictureBox1->Visible = true;
+			return;
 		}
-		else {
 			if (turno == false) {
 				//-----------------------Comprueba si ha clickeado Boton defendido-------------------//
 				if (getDefendido()) {
@@ -55,7 +66,6 @@ public:
 				turno = true;
 			}
 		}
-	}
 
 	Heroe *getHeroe() { return objHeroe; }
 	bool getTurno() { return turno; }
