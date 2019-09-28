@@ -40,10 +40,12 @@ namespace parcial1 {
 			mapa5 = new Mapas(5, 0, 0, 625, 384, 0, 0, "fondazo5_last.jpg", 15, false);
 			//-------------------------------------------------------------------------
 
-			imagen = gcnew Bitmap("heroe.jpg");//se tiene que corregir los sprites, no todos tienen el mismo ancho
+			imagen = gcnew Bitmap("heroe.png");//se tiene que corregir los sprites, no todos tienen el mismo ancho
 			imagen_malo = gcnew Bitmap("esqueleto.png");
 			imagen_malo2 = gcnew Bitmap("Orcos.png");
 			game_over = gcnew Bitmap("Game_Over.png");
+			jefe = gcnew Bitmap("jefe_final.png");
+			win = gcnew Bitmap("YOU_WIN.jpg");
 			objControla->getHeroe()->setx(150);
 			objControla->getHeroe()->sety(315);
 			objControla->getHeroe()->setw(imagen->Width / 14);
@@ -89,8 +91,10 @@ namespace parcial1 {
 		Bitmap^imagen;
 		Bitmap^imagen_malo;
 		Bitmap^imagen_malo2;
+		Bitmap^jefe; 
 		Bitmap^plantilla;
 		Bitmap^game_over;
+		Bitmap^win;
 		
 		
 		bool dificultad = true;
@@ -251,9 +255,9 @@ namespace parcial1 {
 				 // pictureBox1
 				 // 
 				 this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-				 this->pictureBox1->Location = System::Drawing::Point(530, 141);
+				 this->pictureBox1->Location = System::Drawing::Point(549, 196);
 				 this->pictureBox1->Name = L"pictureBox1";
-				 this->pictureBox1->Size = System::Drawing::Size(83, 64);
+				 this->pictureBox1->Size = System::Drawing::Size(64, 54);
 				 this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
 				 this->pictureBox1->TabIndex = 12;
 				 this->pictureBox1->TabStop = false;
@@ -307,13 +311,26 @@ namespace parcial1 {
 		BufferedGraphics^bg = bc->Allocate(g, this->ClientRectangle);
 		bg->Graphics->Clear(Color::White);
 
+		//----------------------Daño Enemigos------------------------//
 		if (dificultad) {
 			arrMalo[iterador]->setFuerza(10);
 		}
 		else {
 			arrMalo[iterador]->setFuerza(35);
 		}
+		
+		//----------------------Daño del jefe-------------------------//
 
+		if (iterador == 4) {
+			if (dificultad) {
+				arrMalo[4]->setFuerza(23);
+			}
+			else {
+				arrMalo[4]->setFuerza(31);
+			}
+		}
+		
+		//----------------------Mapa Actual----------------------------//
 		switch (num_mapa) {
 		case 1:
 			plantilla = imagen_malo;
@@ -344,26 +361,29 @@ namespace parcial1 {
 			plantilla = imagen_malo2;
 			mapa4->Mover(bg->Graphics);
 			arrMalo[iterador]->setx(415);
-			arrMalo[iterador]->sety(330);
+			arrMalo[iterador]->sety(300);
 			arrMalo[iterador]->setw(plantilla->Width / 13);
 			arrMalo[iterador]->seth(plantilla->Height / 1);
 			break;
 		case 5:
-			plantilla = imagen_malo;
+			plantilla = jefe;
 			mapa5->Mover(bg->Graphics);
 			arrMalo[iterador]->setx(415);
-			arrMalo[iterador]->sety(330);
-			arrMalo[iterador]->setw(plantilla->Width / 6);
+			arrMalo[iterador]->sety(230);
+			arrMalo[iterador]->setw(plantilla->Width / 1);
 			arrMalo[iterador]->seth(plantilla->Height / 1);
+			/*arrMalo[iterador]->setvida(200);*/
 			break;
 		default:
 			break;
 		}
 		
+		//------------------------Juego--------------------------------//
 		if (objControla->getHeroe()->getvida() > 0) {
 			objControla->Start(iterador, arrMalo, bg->Graphics, objControla->getHeroe(), imagen, plantilla, objControla->getDefendido(), objControla->getItem_Def(), Barra_Heroe, textBox2, pictureBox1);
 		}
 		else {
+			mensaje->Visible = false;
 			bg->Graphics->DrawImage(game_over, 0,0, 625, 462);
 			progressBar1->Visible = false;
 			Barra_Heroe->Visible = false;
@@ -374,25 +394,44 @@ namespace parcial1 {
 			Atacar->Visible = false;
 		}
 
+		if(arrMalo[4]->getvida() <= 0){
+			bg->Graphics->DrawImage(win, 0, 0, 625, 462);
+		}
+
 		bg->Render(g);
 		delete bc; delete bg; delete g;
 
 	}
+
+//----------------------------------------Boton ATACAR------------------------------------------------//
 	private: System::Void Atacar_Click(System::Object^  sender, System::EventArgs^  e) {
 		arrMalo[iterador]->setvida(arrMalo[iterador]->getvida() - objControla->getHeroe()->getFuerza());
 		progressBar1->Increment(objControla->getHeroe()->getFuerza()*-1);
 		textBox1->Text = (objControla->getHeroe()->getFuerza() * -1).ToString();
 		objControla->setTurno(false);
 	}
+
+
+
 	private: System::Void progressBar1_Click_1(System::Object^  sender, System::EventArgs^  e) {
 
 	}
+
+
+
+
 private: System::Void Barra_Heroe_Click(System::Object^  sender, System::EventArgs^  e) {
 }
+
+
+//---------------------------------Boton DEFENDER-----------------------------------//
 private: System::Void Defender_Click(System::Object^  sender, System::EventArgs^  e) {
 	objControla->setTurno(false);
 	objControla->setDefendido(true);
 }
+
+
+//---------------------------------Boton INVENTARIO----------------------------------//
 private: System::Void Inventario_Click(System::Object^  sender, System::EventArgs^  e) {
 	Atacar->Visible = false; Defender->Visible = false; Inventario->Visible = false;
 	Item_Vida->Visible = true; Item_Defensa->Visible = true; Regresar_btn->Visible = true;
@@ -451,6 +490,11 @@ private: System::Void pictureBox1_Click(System::Object^  sender, System::EventAr
 		objControla->setTurno(true);
 		progressBar1->Increment(100);
 		mensaje->Visible = false;
+		textBox1->Text = "";
+		textBox2->Text = "";
+		if (iterador == 4) {
+			arrMalo[4]->setvida(200);
+		}
 		if (num_mapa % 2 == 0) {
 			objControla->setCont_item_Vida(objControla->getCont_item_Vida() + 1);
 		}
